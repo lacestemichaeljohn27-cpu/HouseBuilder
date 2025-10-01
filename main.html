@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HouseBuilder - Dashboard</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="main-header d-flex align-items-center px-3 py-2 shadow-sm">
+   <span class="logo px-2 py-1 rounded">HB</span>
+    <h1 class="ms-2 m-0 fw-bold">HouseBuilder</h1>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container-fluid my-4">
+    <div class="row g-3">
+      
+      <!-- Left: House Preview -->
+      <div class="col-lg-8">
+        <div class="house-preview p-3 bg-white rounded shadow-sm h-100">
+          <div class="preview-text text-start">
+            <h2 id="house-title" class="h4">Re-imagine and Explore Your Dream Home</h2>
+            <p class="text-muted small">Selection of House Models with personalized estimated pricing for logged-in clients</p>
+          </div>
+
+          <!-- 3D House Preview -->
+          <div class="image-slider mt-3 position-relative text-center">
+            <div id="house-3d"></div>
+          </div>
+
+          <button class="btn btn-primary w-100 mt-3 confirm-btn">Confirm Design</button>
+        </div>
+      </div>
+
+      <!-- Right: Filters + Auth Box -->
+      <aside class="col-lg-4">
+        <!-- Filters -->
+        <div class="filters p-3 bg-white rounded shadow-sm mb-3">
+          <h3 class="h6 mb-3 fw-bold text-primary">Filter Options</h3>
+
+          <div class="mb-2">
+            <label class="fw-bold">Number of Bedrooms</label>
+            <select class="form-select form-select-sm">
+              <option>Select number of Bedrooms</option>
+              <option>1 Bedroom</option>
+              <option>2 Bedrooms</option>
+              <option>3 Bedrooms</option>
+              <option>4+ Bedrooms</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="fw-bold">Number of Bathrooms</label>
+            <select class="form-select form-select-sm">
+              <option>Select number of Bathrooms</option>
+              <option>1 Bathroom</option>
+              <option>2 Bathrooms</option>
+              <option>3 Bathrooms</option>
+              <option>4+ Bathrooms</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="fw-bold">Style Category</label>
+            <select class="form-select form-select-sm">
+              <option>Select a Style</option>
+              <option>Modern / Contemporary</option>
+              <option>Traditional</option>
+              <option>Mediterranean</option>
+              <option>Minimalist</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="fw-bold">Lot Size</label>
+            <select class="form-select form-select-sm">
+              <option>Select Lot Size</option>
+              <option>Packed (40-60 sqm)</option>
+              <option>Common (70-100 sqm)</option>
+              <option>Standard (110-150 sqm)</option>
+              <option>High-End (200+ sqm)</option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="fw-bold">Number of Floors</label>
+            <select class="form-select form-select-sm">
+              <option>Select Number of Floors</option>
+              <option>Bungalow (1 Floor)</option>
+              <option>2 Storey</option>
+              <option>3 Storey</option>
+              <option>High-Rise (4+ Floors)</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="fw-bold">Features</label>
+            <div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label">Balcony</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label">Garage</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label">Swimming Pool</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label">Backyard</label></div>
+            <div class="form-check"><input class="form-check-input" type="checkbox"><label class="form-check-label">Basement</label></div>
+          </div>
+        </div>
+
+        <!-- Auth Box -->
+        <div class="sign-login-container auth-box p-3 bg-white rounded shadow-sm">
+          <div class="auth-tabs d-flex border-bottom mb-3">
+            <button class="tab active btn flex-fill" data-tab="signin">Sign In</button>
+            <button class="tab btn flex-fill" data-tab="signup">Sign Up</button>
+          </div>
+
+          <!-- Sign In -->
+          <form id="signin-form" class="auth-form active">
+            <div class="mb-2">
+              <input type="email" name="email" class="form-control" placeholder="Email address" required>
+            </div>
+            <div class="mb-2">
+              <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <button type="button" class="btn btn-primary w-100 mb-2" id="signin-btn">Sign In</button>
+            <button type="button" class="btn btn-danger w-100 mb-2 google" id="google-btn">Sign in with Google</button>
+            <button type="button" class="btn btn-dark w-100" id="logout">Logout</button>
+          </form>
+
+          <!-- Sign Up -->
+          <form id="signup-form" class="auth-form">
+            <div class="mb-2">
+              <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+            </div>
+            <div class="mb-2">
+              <input type="email" name="email" class="form-control" placeholder="Email address" required>
+            </div>
+            <div class="mb-2">
+              <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <div class="mb-2">
+              <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm Password" required>
+            </div>
+            <button type="button" class="btn btn-primary w-100 mb-2" id="signup-btn">Sign Up</button>
+            <button type="button" class="btn btn-danger w-100 google" id="google-signup-btn">Sign up with Google</button>
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Estimate Section -->
+  <section id="estimate-section" class="estimate hidden my-3">
+    <h3 class="h5 mb-3 fw-bold">Project Estimate</h3>
+    <div class="row g-3">
+      
+      <!-- Left: Total Estimate -->
+      <div class="col-md-4">
+        <div class="total-estimate text-center p-4 rounded shadow-sm bg-light animate-fadeIn">
+          <p class="fw-semibold mb-1">TOTAL PROJECT ESTIMATE</p>
+          <h2 class="fw-bold">₱---</h2>
+          <p class="text-muted">Estimated timeline: -- weeks</p>
+          <button class="btn btn-primary mt-3 w-100">Send to Contractor</button>
+        </div>
+      </div>
+
+      <!-- Right: Cost Breakdown -->
+      <div class="col-md-8">
+        <div class="row g-3">
+          <div class="col-6"><div class="breakdown-card">🏠 Base Construction</div></div>
+          <div class="col-6"><div class="breakdown-card">📐 Design & Planning</div></div>
+          <div class="col-6"><div class="breakdown-card">📏 Lot Size Premium</div></div>
+          <div class="col-6"><div class="breakdown-card">🏗️ Additional Floor</div></div>
+          <div class="col-6"><div class="breakdown-card">🧱 Masonry Addition</div></div>
+          <div class="col-6"><div class="breakdown-card">🚗 Garage Addition</div></div>
+          <div class="col-6"><div class="breakdown-card">🌳 Backyard Setup</div></div>
+          <div class="col-6"><div class="breakdown-card">📦 Material Est.</div></div>
+          <div class="col-6"><div class="breakdown-card">👷 Labor Est.</div></div>
+          <div class="col-6"><div class="breakdown-card">📜 Permit & Fees</div></div>
+        </div>
+      </div>
+    </div>
+    <small class="d-block mt-3 text-muted">
+      *Estimates are preliminary and subject to change based on site conditions, material choices, and final specifications.
+    </small>
+  </section>
+
+  <!-- Footer -->
+  <footer class="d-flex flex-wrap justify-content-around p-3 bg-primary text-white">
+    <div class="footer-card mb-2">
+      <h4>Pre-made House Models</h4>
+      <p>Browse curated images and designs to find inspiration for your dream home.</p>
+    </div>
+    <div class="footer-card mb-2">
+      <h4>Experienced Contractors</h4>
+      <p>Connect with professionals who bring your vision to life with quality craftsmanship.</p>
+    </div>
+    <div class="footer-card mb-2">
+      <h4>Personalized Pricing</h4>
+      <p>Get project estimates tailored to your specifications and location.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Three.js & Loaders -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/ColladaLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+  <!-- Custom JS -->
+  <script src="script.js"></script>
+</body>
+</html>
