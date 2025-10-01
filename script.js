@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   // ================================
   // Auth Tabs & Forms
   // ================================
@@ -11,22 +10,91 @@ document.addEventListener("DOMContentLoaded", () => {
   const googleBtns = document.querySelectorAll(".btn[id^='google']");
   const sign_login_container = document.querySelector(".sign-login-container");
 
+
   // ================================
-  // Helper: Render logged-in state
+  // Logout (fixed, single definition)
+  // ================================
+  function handleLogout() {
+    localStorage.removeItem("loggedInUser"); // clear user
+    if (estimateSection) {
+      estimateSection.classList.remove("show");
+      estimateSection.classList.add("hidden");
+    }
+
+    tabs.forEach(t => t.classList.remove("active"));
+    forms.forEach(f => f.classList.remove("active"));
+
+    const signinTab = document.querySelector('[data-tab="signin"]');
+    const signinForm = document.getElementById("signin-form");
+
+    if (signinTab) signinTab.classList.add("active");
+    if (signinForm) signinForm.classList.add("active");
+
+    alert("You have logged out.");
+
+    sign_login_container.innerHTML = `
+    <div class="sign-login-container auth-box p-3 bg-white rounded shadow-sm">
+          <div class="auth-tabs d-flex border-bottom mb-3">
+            <button class="tab active btn flex-fill" data-tab="signin">Sign In</button>
+            <button class="tab btn flex-fill" data-tab="signup">Sign Up</button>
+          </div>
+
+          <!-- Sign In -->
+          <form id="signin-form" class="auth-form active">
+            <div class="mb-2">
+              <input type="email" name="email" class="form-control" placeholder="Email address" required>
+            </div>
+            <div class="mb-2">
+              <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <button type="button" class="btn btn-primary w-100 mb-2" id="signin-btn">Sign In</button>
+            <button type="button" class="btn btn-danger w-100 mb-2 google" id="google-btn">Sign in with Google</button>
+            <button type="button" class="btn btn-dark w-100" id="logout">Logout</button>
+          </form>
+
+          <!-- Sign Up -->
+          <form id="signup-form" class="auth-form">
+            <div class="mb-2">
+              <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+            </div>
+            <div class="mb-2">
+              <input type="email" name="email" class="form-control" placeholder="Email address" required>
+            </div>
+            <div class="mb-2">
+              <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <div class="mb-2">
+              <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm Password" required>
+            </div>
+            <button type="button" class="btn btn-primary w-100 mb-2" id="signup-btn">Sign Up</button>
+            <button type="button" class="btn btn-danger w-100 google" id="google-signup-btn">Sign up with Google</button>
+          </form>
+        </div>
+    `
+  }
+
+  // Attach listener once (delegation)
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "logout") {
+      handleLogout();
+    }
+  });
+
+  // ================================
+  // Show logged-in state
   // ================================
   function showLoggedIn(user) {
     if (estimateSection) {
       estimateSection.classList.remove("hidden");
       estimateSection.classList.add("show");
     }
+
     sign_login_container.innerHTML = `
       <div class="sign-login-container auth-box p-3 bg-white rounded shadow-sm">
         <p class="mb-2">👋 Welcome, <strong>${user}</strong></p>
         <button type="button" class="btn btn-dark w-100" id="logout">Logout</button>
       </div>
     `;
-    const logoutBtn = document.getElementById("logout");
-    logoutBtn.addEventListener("click", handleLogout);
   }
 
   // ================================
@@ -36,11 +104,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (savedUser) {
     showLoggedIn(savedUser);
   } else {
-    // Show Sign In by default
-    document.getElementById("signin-form").classList.add("active");
+    const signinForm = document.getElementById("signin-form");
+    if (signinForm) signinForm.classList.add("active");
   }
 
+  // ================================
   // Tab switching
+  // ================================
   tabs.forEach(tab => {
     tab.addEventListener("click", () => {
       tabs.forEach(t => t.classList.remove("active"));
@@ -48,7 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       tab.classList.add("active");
       const target = tab.getAttribute("data-tab") + "-form";
-      document.getElementById(target).classList.add("active");
+      const targetForm = document.getElementById(target);
+      if (targetForm) targetForm.classList.add("active");
 
       if (tab.getAttribute("data-tab") === "signup" && estimateSection) {
         estimateSection.classList.remove("show");
@@ -113,8 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.success) {
           tabs.forEach(t => t.classList.remove("active"));
           forms.forEach(f => f.classList.remove("active"));
-          document.querySelector('[data-tab="signin"]').classList.add("active");
-          document.getElementById("signin-form").classList.add("active");
+          const signinTab = document.querySelector('[data-tab="signin"]');
+          const signinForm = document.getElementById("signin-form");
+          if (signinTab) signinTab.classList.add("active");
+          if (signinForm) signinForm.classList.add("active");
           alert("✅ Account created successfully! Please sign in.");
         } else {
           alert("❌ Sign up failed: " + data.message);
@@ -127,22 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ================================
-  // Logout
-  // ================================
-  function handleLogout() {
-    localStorage.removeItem("loggedInUser"); // clear user
-    if (estimateSection) {
-      estimateSection.classList.remove("show");
-      estimateSection.classList.add("hidden");
-    }
-    tabs.forEach(t => t.classList.remove("active"));
-    forms.forEach(f => f.classList.remove("active"));
-    document.querySelector('[data-tab="signin"]').classList.add("active");
-    document.getElementById("signin-form").classList.add("active");
-    alert("You have logged out.");
-  }
-
-  // ================================
   // Confirm Design → Go to Sign In
   // ================================
   const confirmBtn = document.querySelector(".confirm-btn");
@@ -153,8 +210,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     tabs.forEach(t => t.classList.remove("active"));
     forms.forEach(f => f.classList.remove("active"));
-    document.querySelector('[data-tab="signin"]').classList.add("active");
-    document.getElementById("signin-form").classList.add("active");
+    const signinTab = document.querySelector('[data-tab="signin"]');
+    const signinForm = document.getElementById("signin-form");
+    if (signinTab) signinTab.classList.add("active");
+    if (signinForm) signinForm.classList.add("active");
     alert("Please sign in to proceed with the estimate.");
   });
 
